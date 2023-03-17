@@ -1,0 +1,11 @@
+options:
+  port:
+    description: "Port to bind to on host."
+    get_opt_type: "OPT"
+    long_name: "port"
+    short_name: "p"
+  verbose:
+    description: "Verbose logging."
+    get_opt_type: "FLAG"
+    long_name: "verbose"
+    short_name: "v"
