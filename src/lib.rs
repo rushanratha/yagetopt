@@ -28,6 +28,10 @@ fn getopt_load_config(config_path: &String) -> GetOptConfig {
 }
 
 pub fn getopt_setup(program: &String, args: &Vec<String>) -> Matches {
+    if args.is_empty() {
+        panic!("getopt setup has empty program arguments");
+    }
+
     if args[0] == String::from("--getoptconfig") {
         let config_path = &args[1];
         let get_opt_config = getopt_load_config(&config_path);
@@ -77,7 +81,7 @@ pub fn getopt_setup(program: &String, args: &Vec<String>) -> Matches {
 
         return matches;
     } else {
-        panic!("--getoptconfig is not the first option from the program arguments")
+        panic!("--getoptconfig is not the first option from the program arguments");
     }
 }
 
@@ -99,7 +103,29 @@ mod tests {
     }
 
     #[test]
-    fn setup() {
+    #[should_panic(expected = "getopt setup has empty program arguments")]
+    fn setup_empty_args() {
+        let program = String::from("yagetopts_test");
+        let args: Vec<String> = vec![];
+
+        getopt_setup(&program, &args);
+    }
+
+    #[test]
+    #[should_panic(expected = "--getoptconfig is not the first option from the program arguments")]
+    fn setup_panic_when_getoptconfig_option_is_not_first_in_args() {
+        let program = String::from("yagetopts_test");
+        let args = vec![
+            String::from("-h"),
+            String::from("--getoptconfig"),
+            String::from("example_getopt_config.yml"),
+        ];
+
+        getopt_setup(&program, &args);
+    }
+
+    #[test]
+    fn help_flag_after_setup() {
         let program = String::from("yagetopts_test");
         let args = vec![
             String::from("--getoptconfig"),
